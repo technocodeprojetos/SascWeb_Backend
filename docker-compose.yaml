@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+    dev:
+        container_name: template_api_dev
+        image: template-api-dev:0.0.1
+        build:
+            context: .
+            target: development
+            dockerfile: ./Dockerfile
+        command: yarn dev
+        env_file:
+            - ".env"
+        ports:
+            - ${SERVER_PORT}:${SERVER_PORT}
+        depends_on:
+            - postgres
+        networks:
+            - template-network
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+
+
+    postgres:
+        container_name: postgres_db
+        image: postgres:14.2
+        ports:
+            - 5432:5432
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        networks:
+            - template-network
+        depends_on:
+            - pgadmin
+        env_file:
+            - ".env"
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_DATABASE}
+            PG_DATA: /var/lib/postgresql/data
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+
+
+    pgadmin:
+        container_name: pgadmin_container
+        image: dpage/pgadmin4
+        ports:
+            - "5500:80"
+        networks:
+            - template-network
+        env_file:
+            - ".env"
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PG_EMAIL}
+            PGADMIN_DEFAULT_PASSWORD: ${PG_PASSWORD}
+
+
+networks:
+    template-network:
+volumes:
+    pgdata:
