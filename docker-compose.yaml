@@ -14,7 +14,7 @@ services:
         ports:
             - ${SERVER_PORT}:${SERVER_PORT}
         depends_on:
-            - postgres
+            - databasePostgres
         networks:
             - template-network
         volumes:
@@ -23,7 +23,7 @@ services:
         restart: unless-stopped
 
 
-    postgres:
+    databasePostgres:
         container_name: postgres_db
         image: postgres:14.2
         ports:

@@ -22,5 +22,17 @@ model User {
     @@map("users")
 }
 
+model Cobranca {
+    id           String   @id @default(uuid())
+    matricula    String
+    nome         String
+    dataCobranca String
+    valor        Decimal
+    create_at    DateTime @default(now())
+    update_at    DateTime @updatedAt
+
+    @@map("cobrancas")
+}
+
 
 

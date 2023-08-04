@@ -6,7 +6,7 @@ import express, { Router, NextFunction, Request, Response } from "express"
 import { AppError } from "./errors/AppError";
 import { routes } from  "./routes"
 
-const PORT = 4004;
+const PORT = 4000;
 const HOST = '0.0.0.0';
 
 const app = express();
